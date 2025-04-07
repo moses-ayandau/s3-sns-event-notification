@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.sns.model.SnsException;
 
 /**
  * Handler for requests to Lambda function.
+ * soeaoinar
  */
 public class App implements RequestHandler<S3Event, String> {
     private final SnsClient snsClient;
