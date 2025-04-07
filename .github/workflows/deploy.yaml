@@ -1,0 +1,59 @@
+name: Deploy SAM Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Install SAM CLI
+        run: |
+          pip install aws-sam-cli
+
+      - name: Build SAM Application
+        run: |
+          cd HelloWorldFunction
+          mvn clean package
+          cd ..
+          sam build
+
+      - name: Deploy to Development
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          sam deploy \
+            --stack-name weekeightlabdev \
+            --parameter-overrides Environment=dev EmailAddress=${{ secrets.NOTIFICATION_EMAIL }} \
+            --capabilities CAPABILITY_IAM \
+            --no-fail-on-empty-changeset \
+            --no-confirm-changeset \
+            --region eu-central-1
+
+      - name: Deploy to Production
+        if: github.ref == 'refs/heads/main'
+        run: |
+          sam deploy \
+            --stack-name weekeightlabprod \
+            --parameter-overrides Environment=prod EmailAddress=${{ secrets.NOTIFICATION_EMAIL }} \
+            --capabilities CAPABILITY_IAM \
+            --no-fail-on-empty-changeset \
+            --no-confirm-changeset \
+            --region eu-central-1
