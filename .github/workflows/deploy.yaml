@@ -40,7 +40,7 @@ jobs:
         if: github.ref == 'refs/heads/develop'
         run: |
           sam deploy \
-            --stack-name sns-dev \
+            --stack-name weekeightlabdev \
             --parameter-overrides Environment=dev EmailAddress=${{ secrets.NOTIFICATION_EMAIL }} \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset \
@@ -51,7 +51,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           sam deploy \
-            --stack-name sns-prod \
+            --stack-name weekeightlabprod \
             --parameter-overrides Environment=prod EmailAddress=${{ secrets.NOTIFICATION_EMAIL }} \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset \
