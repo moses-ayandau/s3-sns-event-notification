@@ -74,12 +74,7 @@ Resources:
         LambdaConfigurations:
           - Event: s3:ObjectCreated:*
             Function: !GetAtt FileUploadFunction.Arn
-            # Filter could be added here if needed
-            # Filter:
-            #   S3Key:
-            #     Rules:
-            #       - Name: suffix
-            #         Value: .jpg
+
 
 # Outputs for easy reference
 Outputs:
