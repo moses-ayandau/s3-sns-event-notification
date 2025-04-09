@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -39,7 +40,7 @@ jobs:
         if: github.ref == 'refs/heads/dev'
         run: |
           sam deploy \
-            --stack-name weekeightlabdev \
+            --stack-name s3-sns-dev \
             --parameter-overrides Environment=dev EmailAddress=${{ secrets.NOTIFICATION_EMAIL }} \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset \
@@ -50,7 +51,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           sam deploy \
-            --stack-name weekeightlabprod \
+            --stack-name s3-sns-prod \
             --parameter-overrides Environment=prod EmailAddress=${{ secrets.NOTIFICATION_EMAIL }} \
             --capabilities CAPABILITY_IAM \
             --no-fail-on-empty-changeset \
